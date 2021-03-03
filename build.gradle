@@ -1,0 +1,40 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id "com.netflix.dgs.codegen" version "4.0.10"
+}
+
+group = 'com.wuwei'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	implementation "com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:latest.release"
+//	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation("com.github.javafaker:javafaker:1.+")
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+generateJava{
+	schemaPaths = ["${projectDir}/src/main/resources/schema"] // List of directories containing schema files
+	packageName = 'com.wuwei.dgs' // The package name to use to generate sources
+	generateClient = true // Enable generating the type safe query API
+}
+
+test {
+	useJUnitPlatform()
+}

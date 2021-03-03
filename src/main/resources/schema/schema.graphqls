@@ -1,0 +1,27 @@
+schema {
+    query: Query
+}
+
+type Query {
+    movies: [Movie]
+    moviesWithMultipleDirector:[MultipleDirectorMovie]
+}
+
+type Movie {
+    movieId: ID
+    name: String
+    directorId: String
+    director: Director
+}
+
+type MultipleDirectorMovie {
+    movieId: ID
+    name: String
+    directorId: String
+    directors: [Director]
+}
+
+type Director {
+    directorId: ID
+    name: String
+}
