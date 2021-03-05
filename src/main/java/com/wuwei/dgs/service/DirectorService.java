@@ -1,6 +1,6 @@
-package com.wuwei.dgs.asyncDataFetching.client;
+package com.wuwei.dgs.service;
 
-import com.wuwei.dgs.asyncDataFetching.types.Director;
+import com.wuwei.dgs.types.Director;
 
 import java.util.*;
 
@@ -9,23 +9,23 @@ import java.util.*;
  *
  * @author haozhiqiang
  */
-public class DirectorServiceClient {
+public class DirectorService {
 
     static Map<String, List<Director>> directorMap;
 
     static {
         directorMap = new HashMap<>();
         directorMap.put("11", Arrays.asList(
-                Director.builder().directorId("11").name("甲A导儿").build(),
-                Director.builder().directorId("11").name("甲B导儿").build()
+                new Director("11", "甲A导儿"),
+                new Director("11", "甲B导儿")
         ));
         directorMap.put("12", Arrays.asList(
-                Director.builder().directorId("12").name("乙A导儿").build(),
-                Director.builder().directorId("12").name("乙B导儿").build()
+                new Director("12", "乙A导儿"),
+                new Director("112", "乙B导儿")
         ));
         directorMap.put("13", Arrays.asList(
-                Director.builder().directorId("13").name("丙A导儿").build(),
-                Director.builder().directorId("13").name("丙B导儿").build()
+                new Director("13", "丙A导儿"),
+                new Director("13", "丙B导儿")
         ));
     }
 

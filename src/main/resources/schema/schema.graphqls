@@ -3,8 +3,8 @@ schema {
 }
 
 type Query {
-    movies: [Movie]
     moviesWithMultipleDirector:[MultipleDirectorMovie]
+    pageMovies(first: Int, after: String): MoviesConnection
 }
 
 type Movie {
@@ -12,6 +12,17 @@ type Movie {
     name: String
     directorId: String
     director: Director
+}
+
+type MoviesConnection {
+    totalCount: Int
+    movies: [Movie]
+    pageInfo:  PageInfo
+}
+
+type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean
 }
 
 type MultipleDirectorMovie {

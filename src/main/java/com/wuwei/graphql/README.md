@@ -6,13 +6,15 @@
 
 ## 2.1 **Fields - 字段** 
 
+可以将 GraphQL 查询中的每个字段视为返回子类型的父类型函数或方法。事实上，这正是 GraphQL 的工作原理。
+
 是 GraphQL 请求对象上的特定字段；
 
 “请求什么，返回什么”；
 
 字段类型即可是基本类型（String、Integer等），也是指代对象类型（Object）；
 
-可以对对象的字段进行次级选择。
+可以对对象的字段进行次级选择;
 
 
 
@@ -351,3 +353,235 @@ query HeroForEpisode($ep: Episode!) {
 
 # 3. Schema 和类型
 
+## Scalar Types - 标量类型
+
+- `Int` : 有符号 32 位整数
+- `Float` : 有符号双精度浮点值
+- `String` : UTF-8 字符续流
+- `Boolean` : true 或 false
+- `ID` ： 表示一个唯一标识符，通常用以重新获取对象或者作为缓存中的键。 定义为 ID 意味着不需要提供给用户，为系统内部读取的。
+
+
+
+**自定义标量**
+
+Scalar Types 中并没有定义 Date 类型， 通常需要自定义，并完成序列化和反序列化的工作。
+
+```
+scalar Date
+```
+
+
+
+## Enumeration Types  - 枚举类型
+
+```
+enum GG{
+  AA
+  BB
+  CC
+}
+```
+
+
+
+## Interfaces - 接口
+
+定义和实现接口
+
+```
+interface Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+}
+
+type Human implements Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+  starships: [Starship]
+  totalCredits: Int
+}
+
+type Droid implements Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+  primaryFunction: String
+}
+```
+
+
+
+## Union Types - 联合类型
+
+```
+union DDD = Human | Droid | Starship
+```
+
+
+
+## Input Types - 输入类型
+
+```
+input ReviewInput {
+  stars: Int!
+  commentary: String
+}
+```
+
+
+
+# 4 实践
+
+## **JSON（使用 GZIP 压缩）**
+
+GraphQL 服务通常返回 JSON 格式的数据，但 GraphQL 规范 [并未要求这一点](http://spec.graphql.cn/#sec-Serialization-Format-)。对于期望更好的网络性能的 API 层来说，使用 JSON 似乎是一个奇怪的选择，但由于它主要是文本，因而在 GZIP 压缩后表现非常好。
+
+推荐任何在生产环境下的 GraphQL 服务都启用 GZIP，并推荐在客户端请求头中加入：
+
+```undefined
+Accept-Encoding: gzip
+```
+
+客户端和 API 开发人员也非常熟悉 JSON，易于阅读和调试。事实上，GraphQL 语法部分地受到 JSON 语法的启发
+
+
+
+### 可以为空的性质 
+
+​	每个字段都可以返回空值；如果某些字段返回空值不合理，那么需要对它进行非空限制。
+
+
+
+## 分页
+
+基于游标的分页是最佳方案，即使分页模型未来发生变化，使用游标可以提供额外的灵活性。
+
+### 分页和边
+
+游标由服务端提供；
+
+**游标格式：**游标格式并不应拘泥与特定类型，如 `Int`、`String`，这会导致依赖指定数据类型的游标， 当服务端发生变化，比如游标类型由 Int 改变为 `String` 时，会影响到依赖方。 因此建议用 `base64` 编码游标。
+
+**获取游标：**游标在分页中起到“连接”的功能，不应作为任何业务对象的属性。因此可以引入一个中间层 `edge`，`edge`持有游标和下一层级的节点。
+
+```
+{
+  hero {
+    name
+    friends(first:2) {
+      edges {
+        node {
+          name
+        }
+        cursor
+      }
+    }
+  }
+}
+```
+
+诸如一些统计类的数据，也是可以放在 `edge` 中传递的。 比如本例中描述的时朋友数据，可以增加 “友谊时间”这个属性，放置在`edge`中是很自然的。
+
+
+
+**判断分页结束以及计数**
+
+基于 edge 的分页有以下两个问题：
+
+- 可以通过查询返回空列表，标志着分页查询的结束，但是需要额外再发送一个请求，在逻辑上是不合理的
+- 需要掌握 “列表” 数据的总条数
+
+
+
+为了解决这两个问题，friends 字段可以返回一个连接对象，对象中持有`edge`以及`pageInfo`。
+
+`totalCount`： 列表数据总条数
+
+`pageInfo`: 可以在不访问 `edge`的情况下，获取所有分页所需要的信息，包括 `endCursor` -- 以获取数据的最后一个游标，以及 `hasNextPage` -- 是否还有下一页
+
+```
+{
+  hero {
+    name
+    friends(first:2) {
+      totalCount
+      edges {
+        node {
+          name
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+```
+
+
+
+**完整的连接模型**
+
+包含以下功能：
+
+- 为列表分页的能力。
+- 请求有关连接本身的信息的能力，如 `totalCount` 或 `pageInfo`。
+- 请求有关边本身的信息的能力，如 `cursor` 或 `friendshipTime`。
+- 改变我们后端如何实现分页的能力，因为用户仅使用不透明的游标。
+
+
+
+```
+{
+  hero {
+    name
+    friendsConnection(first:2 after:"Y3Vyc29yMQ==") {
+      totalCount
+      edges {
+        node {
+          name
+        }
+        cursor
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+```
+
+
+
+可将 `friends` 替换 `edges`， 需要游标信息直接从 `pageInfo` 中拿，这样无需额外的边这一层，如下：
+
+```
+{
+  hero {
+    name
+    friendsConnection(first:2 after:"Y3Vyc29yMQ==") {
+      totalCount
+      friends {
+          name
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+```
+
+**分页规范**
+
+[**分页规范**](https://relay.dev/graphql/connections.htm)
