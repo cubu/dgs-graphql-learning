@@ -1,16 +1,47 @@
 package com.wuwei.dgs.types;
 
 public class PageInfo {
-  private String endCursor;
+  private boolean hasPreviousPage;
 
-  private Boolean hasNextPage;
+  private boolean hasNextPage;
+
+  private String startCursor;
+
+  private String endCursor;
 
   public PageInfo() {
   }
 
-  public PageInfo(String endCursor, Boolean hasNextPage) {
-    this.endCursor = endCursor;
+  public PageInfo(boolean hasPreviousPage, boolean hasNextPage, String startCursor,
+      String endCursor) {
+    this.hasPreviousPage = hasPreviousPage;
     this.hasNextPage = hasNextPage;
+    this.startCursor = startCursor;
+    this.endCursor = endCursor;
+  }
+
+  public boolean getHasPreviousPage() {
+    return hasPreviousPage;
+  }
+
+  public void setHasPreviousPage(boolean hasPreviousPage) {
+    this.hasPreviousPage = hasPreviousPage;
+  }
+
+  public boolean getHasNextPage() {
+    return hasNextPage;
+  }
+
+  public void setHasNextPage(boolean hasNextPage) {
+    this.hasNextPage = hasNextPage;
+  }
+
+  public String getStartCursor() {
+    return startCursor;
+  }
+
+  public void setStartCursor(String startCursor) {
+    this.startCursor = startCursor;
   }
 
   public String getEndCursor() {
@@ -21,17 +52,9 @@ public class PageInfo {
     this.endCursor = endCursor;
   }
 
-  public Boolean getHasNextPage() {
-    return hasNextPage;
-  }
-
-  public void setHasNextPage(Boolean hasNextPage) {
-    this.hasNextPage = hasNextPage;
-  }
-
   @Override
   public String toString() {
-    return "PageInfo{" + "endCursor='" + endCursor + "'," +"hasNextPage='" + hasNextPage + "'" +"}";
+    return "PageInfo{" + "hasPreviousPage='" + hasPreviousPage + "'," +"hasNextPage='" + hasNextPage + "'," +"startCursor='" + startCursor + "'," +"endCursor='" + endCursor + "'" +"}";
   }
 
   @Override
@@ -39,13 +62,15 @@ public class PageInfo {
     if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PageInfo that = (PageInfo) o;
-        return java.util.Objects.equals(endCursor, that.endCursor) &&
-                            java.util.Objects.equals(hasNextPage, that.hasNextPage);
+        return hasPreviousPage == that.hasPreviousPage &&
+                            hasNextPage == that.hasNextPage &&
+                            java.util.Objects.equals(startCursor, that.startCursor) &&
+                            java.util.Objects.equals(endCursor, that.endCursor);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(endCursor, hasNextPage);
+    return java.util.Objects.hash(hasPreviousPage, hasNextPage, startCursor, endCursor);
   }
 
   public static Builder newBuilder() {
@@ -53,24 +78,40 @@ public class PageInfo {
   }
 
   public static class Builder {
-    private String endCursor;
+    private boolean hasPreviousPage;
 
-    private Boolean hasNextPage;
+    private boolean hasNextPage;
+
+    private String startCursor;
+
+    private String endCursor;
 
     public PageInfo build() {
                   PageInfo result = new PageInfo();
-                      result.endCursor = this.endCursor;
+                      result.hasPreviousPage = this.hasPreviousPage;
           result.hasNextPage = this.hasNextPage;
+          result.startCursor = this.startCursor;
+          result.endCursor = this.endCursor;
                       return result;
+    }
+
+    public Builder hasPreviousPage(boolean hasPreviousPage) {
+      this.hasPreviousPage = hasPreviousPage;
+      return this;
+    }
+
+    public Builder hasNextPage(boolean hasNextPage) {
+      this.hasNextPage = hasNextPage;
+      return this;
+    }
+
+    public Builder startCursor(String startCursor) {
+      this.startCursor = startCursor;
+      return this;
     }
 
     public Builder endCursor(String endCursor) {
       this.endCursor = endCursor;
-      return this;
-    }
-
-    public Builder hasNextPage(Boolean hasNextPage) {
-      this.hasNextPage = hasNextPage;
       return this;
     }
   }

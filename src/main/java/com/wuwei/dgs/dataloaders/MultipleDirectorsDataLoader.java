@@ -2,6 +2,7 @@ package com.wuwei.dgs.dataloaders;
 
 import com.netflix.graphql.dgs.DgsDataLoader;
 import com.wuwei.dgs.service.DirectorService;
+import com.wuwei.dgs.service.MultipleDirectorService;
 import com.wuwei.dgs.types.Director;
 import org.dataloader.MappedBatchLoader;
 
@@ -22,7 +23,7 @@ public class MultipleDirectorsDataLoader implements MappedBatchLoader<String, Li
     @Override
     public CompletionStage<Map<String, List<Director>>> load(Set<String> keys) {
         return CompletableFuture.supplyAsync(
-                () -> DirectorService.loadMapDirectors(keys)
+                () -> MultipleDirectorService.loadMapDirectors(keys)
         );
     }
 }

@@ -1,22 +1,20 @@
 package com.wuwei.dgs.types;
 
-import graphql.relay.PageInfo;
-
 import java.util.List;
 
 public class MoviesConnection {
   private Integer totalCount;
 
-  private List<Movie> movies;
+  private List<MovieEdge> edges;
 
   private PageInfo pageInfo;
 
   public MoviesConnection() {
   }
 
-  public MoviesConnection(Integer totalCount, List<Movie> movies, PageInfo pageInfo) {
+  public MoviesConnection(Integer totalCount, List<MovieEdge> edges, PageInfo pageInfo) {
     this.totalCount = totalCount;
-    this.movies = movies;
+    this.edges = edges;
     this.pageInfo = pageInfo;
   }
 
@@ -28,12 +26,12 @@ public class MoviesConnection {
     this.totalCount = totalCount;
   }
 
-  public List<Movie> getMovies() {
-    return movies;
+  public List<MovieEdge> getEdges() {
+    return edges;
   }
 
-  public void setMovies(List<Movie> movies) {
-    this.movies = movies;
+  public void setEdges(List<MovieEdge> edges) {
+    this.edges = edges;
   }
 
   public PageInfo getPageInfo() {
@@ -46,7 +44,7 @@ public class MoviesConnection {
 
   @Override
   public String toString() {
-    return "MoviesConnection{" + "totalCount='" + totalCount + "'," +"movies='" + movies + "'," +"pageInfo='" + pageInfo + "'" +"}";
+    return "MoviesConnection{" + "totalCount='" + totalCount + "'," +"edges='" + edges + "'," +"pageInfo='" + pageInfo + "'" +"}";
   }
 
   @Override
@@ -55,13 +53,13 @@ public class MoviesConnection {
         if (o == null || getClass() != o.getClass()) return false;
         MoviesConnection that = (MoviesConnection) o;
         return java.util.Objects.equals(totalCount, that.totalCount) &&
-                            java.util.Objects.equals(movies, that.movies) &&
+                            java.util.Objects.equals(edges, that.edges) &&
                             java.util.Objects.equals(pageInfo, that.pageInfo);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(totalCount, movies, pageInfo);
+    return java.util.Objects.hash(totalCount, edges, pageInfo);
   }
 
   public static Builder newBuilder() {
@@ -71,14 +69,14 @@ public class MoviesConnection {
   public static class Builder {
     private Integer totalCount;
 
-    private List<Movie> movies;
+    private List<MovieEdge> edges;
 
     private PageInfo pageInfo;
 
     public MoviesConnection build() {
                   MoviesConnection result = new MoviesConnection();
                       result.totalCount = this.totalCount;
-          result.movies = this.movies;
+          result.edges = this.edges;
           result.pageInfo = this.pageInfo;
                       return result;
     }
@@ -88,8 +86,8 @@ public class MoviesConnection {
       return this;
     }
 
-    public Builder movies(List<Movie> movies) {
-      this.movies = movies;
+    public Builder edges(List<MovieEdge> edges) {
+      this.edges = edges;
       return this;
     }
 

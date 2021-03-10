@@ -582,6 +582,7 @@ Accept-Encoding: gzip
 }
 ```
 
-**分页规范**
+**Relay的分页模式**
 
-[**分页规范**](https://relay.dev/graphql/connections.htm)
+[****Relay的分页模式****](https://relay.dev/graphql/connections.htm)
+

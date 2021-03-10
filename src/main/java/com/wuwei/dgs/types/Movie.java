@@ -1,7 +1,12 @@
 package com.wuwei.dgs.types;
 
-public class Movie {
-  private String movieId;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NONE
+)
+public class Movie implements Node {
+  private String id;
 
   private String name;
 
@@ -12,19 +17,19 @@ public class Movie {
   public Movie() {
   }
 
-  public Movie(String movieId, String name, String directorId, Director director) {
-    this.movieId = movieId;
+  public Movie(String id, String name, String directorId, Director director) {
+    this.id = id;
     this.name = name;
     this.directorId = directorId;
     this.director = director;
   }
 
-  public String getMovieId() {
-    return movieId;
+  public String getId() {
+    return id;
   }
 
-  public void setMovieId(String movieId) {
-    this.movieId = movieId;
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -53,7 +58,7 @@ public class Movie {
 
   @Override
   public String toString() {
-    return "Movie{" + "movieId='" + movieId + "'," +"name='" + name + "'," +"directorId='" + directorId + "'," +"director='" + director + "'" +"}";
+    return "Movie{" + "id='" + id + "'," +"name='" + name + "'," +"directorId='" + directorId + "'," +"director='" + director + "'" +"}";
   }
 
   @Override
@@ -61,7 +66,7 @@ public class Movie {
     if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie that = (Movie) o;
-        return java.util.Objects.equals(movieId, that.movieId) &&
+        return java.util.Objects.equals(id, that.id) &&
                             java.util.Objects.equals(name, that.name) &&
                             java.util.Objects.equals(directorId, that.directorId) &&
                             java.util.Objects.equals(director, that.director);
@@ -69,7 +74,7 @@ public class Movie {
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(movieId, name, directorId, director);
+    return java.util.Objects.hash(id, name, directorId, director);
   }
 
   public static Builder newBuilder() {
@@ -77,7 +82,7 @@ public class Movie {
   }
 
   public static class Builder {
-    private String movieId;
+    private String id;
 
     private String name;
 
@@ -87,15 +92,15 @@ public class Movie {
 
     public Movie build() {
                   Movie result = new Movie();
-                      result.movieId = this.movieId;
+                      result.id = this.id;
           result.name = this.name;
           result.directorId = this.directorId;
           result.director = this.director;
                       return result;
     }
 
-    public Builder movieId(String movieId) {
-      this.movieId = movieId;
+    public Builder id(String id) {
+      this.id = id;
       return this;
     }
 

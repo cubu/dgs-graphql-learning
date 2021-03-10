@@ -11,6 +11,7 @@ import org.dataloader.DataLoader;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 通过 directorId 加载一个 Director
  * @author haozhiqiang
  */
 @DgsComponent

@@ -3,36 +3,60 @@ schema {
 }
 
 type Query {
-    moviesWithMultipleDirector:[MultipleDirectorMovie]
-    pageMovies(first: Int, after: String): MoviesConnection
+    movies: [Movie]
+    movies2: [Movie2]
+    pageMoviesWithCursor(first: Int!, after: String): MoviesConnection
+    pageMovies(pageSize: Int!, pageNum: Int!): PageList
 }
 
-type Movie {
-    movieId: ID
+# 实体、节点接口
+interface Node {
+    id: ID
+}
+
+type Movie implements Node {
+    id: ID
     name: String
     directorId: String
     director: Director
 }
 
-type MoviesConnection {
-    totalCount: Int
-    movies: [Movie]
-    pageInfo:  PageInfo
-}
-
-type PageInfo {
-    endCursor: String
-    hasNextPage: Boolean
-}
-
-type MultipleDirectorMovie {
-    movieId: ID
+#
+type Movie2 {
+    id: ID
     name: String
-    directorId: String
     directors: [Director]
 }
 
 type Director {
-    directorId: ID
+    id: ID
     name: String
 }
+
+#-↓--------- 传统分页 --------- ↓-#
+type PageList {
+    totalCount: Int
+    nodes: [Node]
+}
+#-↑--------- 传统分页 --------- ↑-#
+
+
+#-↓--------- 游标分页 --------- ↓-#
+type MoviesConnection {
+    totalCount: Int
+    edges: [MovieEdge]
+    pageInfo: PageInfo
+}
+
+type MovieEdge{
+    cursor:String
+    node:Movie
+}
+
+type PageInfo {
+    hasPreviousPage : Boolean!
+    hasNextPage: Boolean!
+    startCursor : String!
+    endCursor: String!
+}
+#-↑--------- 游标分页 --------- ↑-#
