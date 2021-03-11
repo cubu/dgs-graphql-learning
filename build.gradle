@@ -1,14 +1,18 @@
 plugins {
 	id 'org.springframework.boot' version '2.4.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "com.netflix.dgs.codegen" version "4.0.10"
+	id 'com.netflix.dgs.codegen' version '4.1.2'
+	id 'com.palantir.docker-run' version '0.26.0'
 	id 'application'
 	id 'java'
 }
 
-group = 'com.wuwei'
+group = 'wuwei'
 version = '0.0.1-SNAPSHOT'
+name = 'dgs-graphql-example'
 sourceCompatibility = '1.8'
+targetCompatibility = "1.8"
+
 
 configurations {
 	compileOnly {
@@ -17,6 +21,7 @@ configurations {
 }
 
 repositories {
+	mavenCentral()
 	jcenter()
 }
 
