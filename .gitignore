@@ -27,3 +27,7 @@ hs_err_pid*
 
 # Gradle
 .gradle
+
+# Build
+**/build/
+**/classes/

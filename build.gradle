@@ -9,7 +9,6 @@ plugins {
 
 group = 'wuwei'
 version = '0.0.1-SNAPSHOT'
-name = 'dgs-graphql-example'
 sourceCompatibility = '1.8'
 targetCompatibility = "1.8"
 
@@ -34,7 +33,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-generateJava{
+generateJava {
 	schemaPaths = ["${projectDir}/src/main/resources/schema"] // List of directories containing schema files
 	packageName = 'com.wuwei.dgs' // The package name to use to generate sources
 	generateClient = true // Enable generating the type safe query API

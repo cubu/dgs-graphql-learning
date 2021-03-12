@@ -9,6 +9,8 @@ import java.lang.String;
 import com.wuwei.dgs.constants.DgsConstants;
 import com.wuwei.dgs.service.MovieService;
 import com.wuwei.dgs.types.*;
+import graphql.relay.DefaultConnectionCursor;
+import graphql.relay.DefaultPageInfo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -63,12 +65,10 @@ public class PageMoviesDataFetcher {
                 .totalCount(edges.size())
                 .edges(list)
                 .pageInfo(
-                        PageInfo.newBuilder()
-                                .hasPreviousPage(hasPrevious)
-                                .hasNextPage(hasNext)
-                                .startCursor(edges.get(0).getCursor())
-                                .endCursor(edges.get(edges.size() - 1).getCursor())
-                                .build()
+                        new DefaultPageInfo(new DefaultConnectionCursor(edges.get(0).getCursor()),
+                                new DefaultConnectionCursor(edges.get(edges.size() - 1).getCursor()),
+                                hasPrevious,
+                                hasNext)
                 )
                 .build();
     }
